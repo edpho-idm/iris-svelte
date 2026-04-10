@@ -1,0 +1,21 @@
+Buatkan issue.md berisi planning pembuatan infrastructure untuk project ini.
+
+isi dari plan jangan terlalu detail, cukup garis besar saja.
+
+Plan yang dibuat nantinya akan digunakan oleh junior developer / AI Model yang lebih murah untuk mengerjakan project ini.
+
+Isi dari plan ini adalah sebagai berikut:
+1. Buatkan abstract class AppError yang akan digunakan sebagai base class untuk error pada project ini.
+2. Buatkan error class turunan dari AppError untuk menangani error pada project ini. antara lain:
+    - BadRequestError
+    - UnauthorizedError
+    - NotFoundError
+    - InternalServerError
+    - ForbiddenError
+    - ValidationError
+    - DataNotFoundError
+    - UnknownError
+3. Buatkan mapper class untuk mapping error ke AppError.
+4. Buatkan setup DI menggunakan dependency ioctopus.
+5. Buatkan class HttpClient untuk menangani request ke API.
+
