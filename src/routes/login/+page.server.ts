@@ -5,8 +5,13 @@ import type { AuthService } from '$lib/services/AuthService';
 import { LoginSchema } from '$lib/entities/auth';
 import { AppError } from '$lib/infrastructure/errors/AppError';
 
-export const load: PageServerLoad = async ({ locals }) => {
-	// If already authenticated, redirect to dashboard (logic goes here later)
+export const load: PageServerLoad = async ({ parent }) => {
+	const { user } = await parent();
+	
+	// Jika sudah login, lempar ke dashboard
+	if (user) {
+		throw redirect(303, '/dashboard');
+	}
 };
 
 export const actions: Actions = {

@@ -1,9 +1,9 @@
-import type { HttpClient } from '../infrastructure/http/HttpClient';
+import type { HttpClient, Fetcher } from '../infrastructure/http/HttpClient';
 import type { AuthResponse, LoginPayload, UserProfile } from '../entities/auth';
 
 export interface IAuthRepository {
 	login(payload: LoginPayload): Promise<AuthResponse>;
-	validateProfile(): Promise<UserProfile>;
+	validateProfile(token: string, fetcher?: Fetcher): Promise<UserProfile>;
 }
 
 export class AuthRepository implements IAuthRepository {
@@ -13,7 +13,11 @@ export class AuthRepository implements IAuthRepository {
 		return await this.http.post<AuthResponse>('/login', payload);
 	}
 
-	async validateProfile(): Promise<UserProfile> {
-		return await this.http.get<UserProfile>('/validate');
+	async validateProfile(token: string, fetcher?: Fetcher): Promise<UserProfile> {
+		return await this.http.get<UserProfile>('/validate', {
+			headers: {
+				'Authorization': `Bearer ${token}`
+			}
+		}, fetcher);
 	}
 }
