@@ -32,4 +32,4 @@ Tahap ini mencakup pembuatan fondasi *infrastructure* dasar untuk menunjang kebu
 
 ## Catatan Eksekusi untuk Developer / AI
 - Jangan buat detail implementasinya terlalu spesifik jika dirasa memakan waktu. Cukup sediakan pondasi kode yang kokoh untuk masing-masing poin di atas.
-- Manfaatkan folder `src/lib/infrastructure/` untuk fungsi DI dan HttpClient, serta letakkan file *Error handling* di lokasi yang sesuai (misalnya di root `src/lib/entities/errors` atau sejenisnya).
+- Manfaatkan folder `src/lib/infrastructure/` untuk fungsi DI, HttpClient, AppError, ErrorMapper, dan Error Classes.
