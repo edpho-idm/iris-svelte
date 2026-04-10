@@ -1,6 +1,8 @@
 import { PUBLIC_API_BASE_URL } from '$env/static/public';
 import { ErrorMapper } from '../errors/ErrorMapper';
 
+export type Fetcher = typeof fetch;
+
 export class HttpClient {
 	private baseUrl: string;
 
@@ -8,11 +10,19 @@ export class HttpClient {
 		this.baseUrl = baseUrl;
 	}
 
-	async request<T>(path: string, options: RequestInit = {}): Promise<T> {
+	/**
+	 * Main request method with optional custom fetcher (for SvelteKit SSR safety)
+	 */
+	async request<T>(
+		path: string, 
+		options: RequestInit = {}, 
+		customFetch?: Fetcher
+	): Promise<T> {
 		const url = path.startsWith('http') ? path : `${this.baseUrl}${path}`;
+		const fetcher = customFetch || fetch;
 
 		try {
-			const response = await fetch(url, {
+			const response = await fetcher(url, {
 				...options,
 				headers: {
 					'Content-Type': 'application/json',
@@ -26,7 +36,6 @@ export class HttpClient {
 				throw ErrorMapper.mapFromStatus(response.status, message);
 			}
 
-			// Handle 204 No Content
 			if (response.status === 204) {
 				return {} as T;
 			}
@@ -37,27 +46,27 @@ export class HttpClient {
 		}
 	}
 
-	get<T>(path: string, options: RequestInit = {}): Promise<T> {
-		return this.request<T>(path, { ...options, method: 'GET' });
+	get<T>(path: string, options: RequestInit = {}, fetcher?: Fetcher): Promise<T> {
+		return this.request<T>(path, { ...options, method: 'GET' }, fetcher);
 	}
 
-	post<T>(path: string, body?: any, options: RequestInit = {}): Promise<T> {
+	post<T>(path: string, body?: any, options: RequestInit = {}, fetcher?: Fetcher): Promise<T> {
 		return this.request<T>(path, {
 			...options,
 			method: 'POST',
 			body: body ? JSON.stringify(body) : undefined
-		});
+		}, fetcher);
 	}
 
-	put<T>(path: string, body?: any, options: RequestInit = {}): Promise<T> {
+	put<T>(path: string, body?: any, options: RequestInit = {}, fetcher?: Fetcher): Promise<T> {
 		return this.request<T>(path, {
 			...options,
 			method: 'PUT',
 			body: body ? JSON.stringify(body) : undefined
-		});
+		}, fetcher);
 	}
 
-	delete<T>(path: string, options: RequestInit = {}): Promise<T> {
-		return this.request<T>(path, { ...options, method: 'DELETE' });
+	delete<T>(path: string, options: RequestInit = {}, fetcher?: Fetcher): Promise<T> {
+		return this.request<T>(path, { ...options, method: 'DELETE' }, fetcher);
 	}
 }
